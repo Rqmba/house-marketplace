@@ -14,6 +14,7 @@ function Contact() {
     const getLandlord = async () => {
       console.log("Fetching landlord with ID:", params.landlordId);
       const docRef = doc(db, "users", params.landlordId);
+      console.log("Firestore Query:", docRef.path);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -23,6 +24,7 @@ function Contact() {
       }
     };
 
+    console.log("Params ID:", params.landlordId);
     getLandlord();
   }, [params.landlordId]);
 
