@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Scrollbar, A11y } from "swiper/modules"; // ✅ Nouveaux imports
-import "swiper/css"; // ✅ Import correct
+import { Pagination, Navigation, Scrollbar, A11y } from "swiper/modules";
+import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/scrollbar";
@@ -43,10 +43,6 @@ function Slider() {
     return <Spinner />;
   }
 
-  if (listings.length === 0) {
-    return <></>;
-  }
-
   if (!listings || listings.length === 0) {
     return <></>;
   }
@@ -60,14 +56,14 @@ function Slider() {
         pagination={{ clickable: true }}
         navigation
         scrollbar={{ draggable: true }}
-        modules={[Pagination, Navigation, Scrollbar, A11y]} // ✅ Ajout des modules ici
+        modules={[Pagination, Navigation, Scrollbar, A11y]}
       >
         {listings.map(({ data, id }) => {
           console.log(
             `Prix pour ${data.name}:`,
             data.discountedPrice,
             data.regularPrice
-          ); // 🔍 Vérifier si les prix existent
+          );
 
           return (
             <SwiperSlide
@@ -85,10 +81,15 @@ function Slider() {
                 className="swiperSlideDiv"
               >
                 <p className="swiperSlideText">{data.name}</p>
-                {/* ✅ Vérification avant d'afficher le prix */}
                 {(data.discountedPrice || data.regularPrice) && (
                   <p className="swiperSlidePrice">
-                    ${data.discountedPrice ?? data.regularPrice}
+                    {"€ " +
+                      (
+                        data.discountedPrice ?? data.regularPrice
+                      ).toLocaleString("fr-FR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     {data.type === "rent" && " / mois"}
                   </p>
                 )}

@@ -7,14 +7,14 @@ import { toast } from "react-toastify";
 function Contact() {
   const [message, setMessage] = useState("");
   const [landlord, setLandlord] = useState(null);
+  // eslint-disable-next-line
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useParams();
 
   useEffect(() => {
     const getLandlord = async () => {
-      console.log("Fetching landlord with ID:", params.landlordId);
       const docRef = doc(db, "users", params.landlordId);
-      console.log("Firestore Query:", docRef.path);
+
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -62,7 +62,7 @@ function Contact() {
               )}&body=${message}`}
             >
               <button type="button" className="primaryButton">
-                Send Message
+                Envoyez
               </button>
             </a>
           </form>

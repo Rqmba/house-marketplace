@@ -7,7 +7,7 @@ function Explore() {
   return (
     <div className="explore">
       <header>
-        <p className="pageHeader">Explore</p>
+        <p className="pageHeader">Accueil</p>
       </header>
 
       <main>
@@ -21,7 +21,7 @@ function Explore() {
               alt="rent"
               className="exploreCategoryImg"
             />
-            <p className="exploreCategoryName">Places for rent</p>
+            <p className="exploreCategoryName">Biens en Location</p>
           </Link>
           <Link to="/category/sale">
             <img
@@ -29,7 +29,7 @@ function Explore() {
               alt="sell"
               className="exploreCategoryImg"
             />
-            <p className="exploreCategoryName">Places for sale</p>
+            <p className="exploreCategoryName">Biens à Vendre</p>
           </Link>
         </div>
       </main>
