@@ -24,14 +24,12 @@ function Slider() {
       let listingsArray = [];
 
       querySnap.forEach((doc) => {
-        const data = doc.data();
         listingsArray.push({
           id: doc.id,
-          data: data,
+          data: doc.data(),
         });
       });
 
-      console.log("Données récupérées :", listingsArray); // 🔍 Debugging
       setListings(listingsArray);
       setLoading(false);
     };
@@ -58,45 +56,38 @@ function Slider() {
         scrollbar={{ draggable: true }}
         modules={[Pagination, Navigation, Scrollbar, A11y]}
       >
-        {listings.map(({ data, id }) => {
-          console.log(
-            `Prix pour ${data.name}:`,
-            data.discountedPrice,
-            data.regularPrice
-          );
-
-          return (
-            <SwiperSlide
-              key={id}
-              onClick={() => navigate(`/category/${data.type}/${id}`)}
+        {listings.map(({ data, id }) => (
+          <SwiperSlide
+            key={id}
+            onClick={() => navigate(`/category/${data.type}/${id}`)}
+          >
+            <div
+              style={{
+                backgroundImage: `url(${data.imgUrls?.[0] || ""})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "100%",
+                height: "300px",
+              }}
+              className="swiperSlideDiv"
             >
-              <div
-                style={{
-                  backgroundImage: `url(${data.imgUrls?.[0] || ""})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  width: "100%",
-                  height: "300px",
-                }}
-                className="swiperSlideDiv"
-              >
-                <p className="swiperSlideText">{data.name}</p>
-                {(data.discountedPrice || data.regularPrice) && (
-                  <p className="swiperSlidePrice">
-                    {"€ " +
-                      (
-                        data.discountedPrice ?? data.regularPrice
-                      ).toLocaleString("fr-FR", {
+              <p className="swiperSlideText">{data.name}</p>
+              {(data.discountedPrice || data.regularPrice) && (
+                <p className="swiperSlidePrice">
+                  {"€ " +
+                    (data.discountedPrice ?? data.regularPrice).toLocaleString(
+                      "fr-FR",
+                      {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
-                      })}
-                    {data.type === "rent" && " / mois"}
-                  </p>
-                )}
-              </div>
-            </SwiperSlide>
-          );
-        })}
+                      }
+                    )}
+                  {data.type === "rent" && " / mois"}
+                </p>
+              )}
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );

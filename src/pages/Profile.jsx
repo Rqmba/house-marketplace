@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, updateProfile } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { db } from "../firebase.config";
 import {
   updateDoc,
   doc,
@@ -13,6 +11,8 @@ import {
   orderBy,
   deleteDoc,
 } from "firebase/firestore";
+import { db } from "../firebase.config";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ListingItem from "../components/ListingItem";
 import arrowRight from "../assets/svg/keyboardArrowRightIcon.svg";
@@ -67,18 +67,21 @@ function Profile() {
 
   const onSubmit = async () => {
     try {
-      if (auth.currentUser.displayName != name) {
+      if (auth.currentUser.displayName !== name) {
+        // Update display name in fb
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
 
+        // Update in firestore
         const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, {
           name,
         });
       }
     } catch (error) {
-      toast.error("Could not update profile details");
+      console.log(error);
+      toast.error("Changements echoué");
     }
   };
 
@@ -90,7 +93,7 @@ function Profile() {
   };
 
   const onDelete = async (listingId) => {
-    if (window.confirm("Etes-vous sur de vouloir supprimé ?")) {
+    if (window.confirm("Êtes-vous de vouloir tout supprimer ?")) {
       await deleteDoc(doc(db, "listings", listingId));
       const updatedListings = listings.filter(
         (listing) => listing.id !== listingId
@@ -105,7 +108,7 @@ function Profile() {
   return (
     <div className="profile">
       <header className="profileHeader">
-        <p className="pageHeader">Mon profile</p>
+        <p className="pageHeader">Mon profil</p>
         <button type="button" className="logOut" onClick={onLogout}>
           Se déconnecter
         </button>
@@ -136,7 +139,7 @@ function Profile() {
               onChange={onChange}
             />
             <input
-              type="text"
+              type="email"
               id="email"
               className={!changeDetails ? "profileEmail" : "profileEmailActive"}
               disabled={!changeDetails}
@@ -154,7 +157,7 @@ function Profile() {
 
         {!loading && listings?.length > 0 && (
           <>
-            <p className="listingsText">Vos annonces</p>
+            <p className="listingText">Vos annonces</p>
             <ul className="listingsList">
               {listings.map((listing) => (
                 <ListingItem
